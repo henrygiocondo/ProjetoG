@@ -1,20 +1,22 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 	<meta charset="UTF-8" />
     <title>Projeto G</title>
 
 	<!--[if IE]><script type="text/javascript" src="lib/excanvas.js"></script><![endif]-->
-    <script src="lib/prototype-1.6.0.2.js"></script>
-    <script src='lib/Box2dWeb-2.1.a.3.min.js'></script>
+    <script type="text/javascript" src="lib/prototype-1.7.1.0.js"></script>
+    <script type="text/javascript" src="lib/Box2dWeb-2.1.a.3.min.js"></script>
+	<script type="text/javascript" src="lib/jquery-2.0.2.min.js"></script>
                     
-    <script src='js/game/player.js'></script>
-    <script src='js/game/ground.js'></script>
-    <script src='js/game/game.js'></script>
+    <script type="text/javascript" src='js/game/player.js'></script>
+    <script type="text/javascript" src='js/game/ground.js'></script>
+    <script type="text/javascript" src='js/game/game.js'></script>
 
   </head>
 <body>
     <script type="text/javascript">
+		var $j = jQuery.noConflict();
 
         var b2Vec2 = Box2D.Common.Math.b2Vec2
           , b2AABB = Box2D.Collision.b2AABB
@@ -36,6 +38,12 @@
         var canvasHeight ;
         var canvasTop;
         var canvasLeft;
+        var currentPlayer;
+        
+        Event.observe(window, 'keydown', function (e) {
+            if (currentPlayer)
+                currentPlayer.move(e.keyIdentifier);
+        });
 
         Event.observe(window, 'load', function () {           
                         
@@ -51,20 +59,27 @@
             canvasTop = parseInt(canvasElm.style.top);
             canvasLeft = parseInt(canvasElm.style.left);
            
-            game = new Game(ctx);
+            game = new Game(ctx, {});
             game.createGround();
 
             var p1 = new Player('Henry', (canvasWidth / 2), canvasTop);
-            game.createPlayer(p1);
+            var p2 = new Player('Joao', 60, canvasTop);
+            var p3 = new Player('Denilson', canvasWidth - 30, canvasTop);
+            currentPlayer = p1;
+
+			game.setInterest(p1);
+
+			game.createPlayer(p1);
+			game.createPlayer(p2);
+			game.createPlayer(p3);
             
-            game.debugDraw();           
+			game.debugDraw();           
             
-            game.start();           
+			game.start();           
         });
     </script>
 
-    <canvas id="canvas" width='600' height='400' style="top:0px; left:0px; background-color:#333333;">
-
+    <canvas id="canvas" width='1000' height='400' style="top:0px; left:0px; background-color:#333333;">
     </canvas>
 
 </body>
