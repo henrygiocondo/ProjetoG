@@ -8,6 +8,7 @@
     <script type="text/javascript" src="lib/prototype-1.7.1.0.js"></script>
     <script type="text/javascript" src="lib/Box2dWeb-2.1.a.3.min.js"></script>
 	<script type="text/javascript" src="lib/jquery-2.0.2.min.js"></script>
+	<!--<script type="text/javascript" src="lib/jquery-ui-1.10.3.custom.min.js"></script>-->
                     
     <script type="text/javascript" src='js/game/player.js'></script>
     <script type="text/javascript" src='js/game/ground.js'></script>
@@ -16,6 +17,7 @@
   </head>
 <body>
     <script type="text/javascript">
+
 		var $j = jQuery.noConflict();
 
         var b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -39,11 +41,28 @@
         var canvasTop;
         var canvasLeft;
         var currentPlayer;
+
+		var game;
         
         Event.observe(window, 'keydown', function (e) {
             if (currentPlayer)
                 currentPlayer.move(e.keyIdentifier);
         });
+
+		var mousestate = { x: 0, y: 0, pressed: false };
+
+		Event.observe(window, 'mousedown', function (e) { mousestate.pressed = true; mousestate.x = e.offsetX; mousestate.y = e.offsetY; })
+		Event.observe(window, 'mouseup', function (e) { mousestate.pressed = false; })
+		Event.observe(window, 'mousemove', function (e) { 
+			if (mousestate.pressed) {
+				game.offsetX -= mousestate.x - e.offsetX;
+				game.offsetY -= mousestate.y - e.offsetY;
+				mousestate.x = e.offsetX;
+				mousestate.y = e.offsetY;
+				//ctx.fillRect(game.offsetX, game.offsetY, canvasWidth + game.offsetX, canvasHeight+game.offsetY);
+				ctx.translate(game.offsetX, game.offsetY);
+			} 
+		})
 
         Event.observe(window, 'load', function () {           
                         
@@ -75,7 +94,9 @@
             
 			game.debugDraw();           
             
-			game.start();           
+			game.start();        
+			
+			ctx.translate(0, 0);   
         });
     </script>
 

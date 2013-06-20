@@ -17,8 +17,8 @@ var Player = Class.create({
         var vel = this.body.GetLinearVelocity();
         switch ( direction )
         {
-            case 'Left': vel.x = -2; break;
-            case 'Right': vel.x = 2; break;
+            case 'Left': vel.x = -4; break;
+            case 'Right': vel.x = 4; break;
             default: vel.x = 0; break;
         }
 
