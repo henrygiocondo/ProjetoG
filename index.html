@@ -9,10 +9,18 @@
     <script type="text/javascript" src="lib/Box2dWeb-2.1.a.3.min.js"></script>
 	<script type="text/javascript" src="lib/jquery-2.0.2.min.js"></script>
 	<!--<script type="text/javascript" src="lib/jquery-ui-1.10.3.custom.min.js"></script>-->
-                    
+    
+	<script type="text/javascript" src='js/game/core.js'></script>                
     <script type="text/javascript" src='js/game/player.js'></script>
     <script type="text/javascript" src='js/game/ground.js'></script>
     <script type="text/javascript" src='js/game/game.js'></script>
+	<script type="text/javascript" src='js/game/camera.js'></script>
+	
+	<style>
+		canvas::selection {
+			background: transparent;
+		}
+	</style>
 
   </head>
 <body>
@@ -43,26 +51,15 @@
         var currentPlayer;
 
 		var game;
+		var camera;
+		var mousestate;
         
         Event.observe(window, 'keydown', function (e) {
             if (currentPlayer)
                 currentPlayer.move(e.keyIdentifier);
         });
 
-		var mousestate = { x: 0, y: 0, pressed: false };
-
-		Event.observe(window, 'mousedown', function (e) { mousestate.pressed = true; mousestate.x = e.offsetX; mousestate.y = e.offsetY; })
-		Event.observe(window, 'mouseup', function (e) { mousestate.pressed = false; })
-		Event.observe(window, 'mousemove', function (e) { 
-			if (mousestate.pressed) {
-				game.offsetX -= mousestate.x - e.offsetX;
-				game.offsetY -= mousestate.y - e.offsetY;
-				mousestate.x = e.offsetX;
-				mousestate.y = e.offsetY;
-				//ctx.fillRect(game.offsetX, game.offsetY, canvasWidth + game.offsetX, canvasHeight+game.offsetY);
-				ctx.translate(game.offsetX, game.offsetY);
-			} 
-		})
+		
 
         Event.observe(window, 'load', function () {           
                         
@@ -96,8 +93,27 @@
             
 			game.start();        
 			
-			ctx.translate(0, 0);   
+			ctx.translate(0, 0);  
+			
+			
+			camera = new Camera(ctx);
+			mousestate = { x: 0, y: 0, pressed: false };
+			
+			camera.setWorld(game);
+
+			Event.observe(window, 'mousedown', function (e) { mousestate.pressed = true; mousestate.x = e.offsetX; mousestate.y = e.offsetY; })
+			Event.observe(window, 'mouseup', function (e) { mousestate.pressed = false; })
+			Event.observe(window, 'mousemove', function (e) { 
+				if (mousestate.pressed) {
+					camera.setPosition(e.offsetX - mousestate.x, e.offsetY - mousestate.y);
+					mousestate.x = e.offsetX;
+					mousestate.y = e.offsetY;
+				} 
+			}); 	
         });
+
+
+		
     </script>
 
     <canvas id="canvas" width='1000' height='400' style="top:0px; left:0px; background-color:#333333;">

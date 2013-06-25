@@ -9,8 +9,6 @@ var Game = Class.create({
 		this.width = ("width" in config)?(config.width):(1400);
 		this.height = ("height" in config)?(config.height):(600);
 		
-		this.offsetX = 0;
-		this.offsetY = 0;
 		this.rotation = 0;
 		this.objectOfInterest = null;
     },
@@ -28,8 +26,8 @@ var Game = Class.create({
 
         this.bodyDef.type = b2Body.b2_staticBody;
         this.fixDef.shape = new b2PolygonShape;
-        this.fixDef.shape.SetAsBox((this.width - 600) / this.scale, 0.1);
-        this.bodyDef.position.Set(300 / this.scale, (this.height - 100) / this.scale);
+        this.fixDef.shape.SetAsBox((this.width - 900) / this.scale, 0.1);
+        this.bodyDef.position.Set(600 / this.scale, (this.height - 100) / this.scale);
         this.world.CreateBody(this.bodyDef).CreateFixture(this.fixDef);
         //this.bodyDef.position.Set(10, -1.8);
         //this.world.CreateBody(this.bodyDef).CreateFixture(this.fixDef);
@@ -74,7 +72,7 @@ var Game = Class.create({
 	},
     draw: function () {
 		this.context.clearRect ( -game.offsetX , -game.offsetY , this.width + game.offsetX , this.height + game.offsetY);
-		this.context.clearRect ( 0 , 0 , this.width + game.offsetX , this.height + game.offsetY);
+		//this.context.clearRect ( 0 , 0 , this.width + game.offsetX , this.height + game.offsetY);
 		
         this.world.Step(1 / 60, 10, 10);
         this.world.DrawDebugData();
@@ -95,7 +93,7 @@ var Game = Class.create({
 		//this.context.drawImage()
 		//this.context.restore();
 		
-
+		EventManager.fire(this.draw);
         this.world.ClearForces();
     },
     start: function () {
