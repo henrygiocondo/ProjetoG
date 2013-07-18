@@ -1,5 +1,6 @@
 var Game = Class.create({
-    initialize: function (context, config) {
+    initialize: function (window, context, config) {
+        this.window = window;
         this.context = context;    
         this.fixDef = new b2FixtureDef;
         this.bodyDef = new b2BodyDef;
@@ -7,10 +8,10 @@ var Game = Class.create({
         this.world = this.createWorld();
         this.players = [];
 		this.width = ("width" in config)?(config.width):(1400);
-		this.height = ("height" in config)?(config.height):(600);
-		
+		this.height = ("height" in config)?(config.height):(600);		
 		this.rotation = 0;
 		this.objectOfInterest = null;
+		this.currentPlayer = null;
     },
     createWorld: function () {        
         return new b2World(new b2Vec2(0, 10), true);
@@ -99,5 +100,59 @@ var Game = Class.create({
     start: function () {
         var t = this;
         setInterval(function () { t.draw(); }, 1000 / 60);
+    },
+    createControls: function () {
+
+        var game = this;
+        var body = this.window.document.body;
+
+        var buttonUp = new Element('button', { 'class': 'up' });
+        var buttonDown = new Element('button', { 'class': 'down' });
+        var buttonLeft = new Element('button', { 'class': 'left' });
+        var buttonRight = new Element('button', { 'class': 'right' });
+
+        body.appendChild(buttonUp);
+        body.appendChild(buttonDown);
+        body.appendChild(buttonLeft);
+        body.appendChild(buttonRight);
+
+        $$('.up', '.down', '.left', '.right').each(function (o) {
+            o.on("mousedown", function (event) {
+                this.pressed = true;
+
+                var direction = "";
+                if (this.hasClassName('up'))
+                    direction = 'Up';
+                if (this.hasClassName('down'))
+                    direction = 'Down';
+                if (this.hasClassName('left'))
+                    direction = 'Left';
+                if (this.hasClassName('right'))
+                    direction = 'Right';
+
+                game.currentPlayer.move(direction);
+            });
+        });
+        
+        $$('.up', '.down', '.left', '.right').each(function (o) {            
+            o.on("mouseup", function (event) {
+
+                if (this.pressed) {
+                    var direction = "";
+
+                    if (this.hasClassName('up'))
+                        direction = 'Up';
+                    if (this.hasClassName('down'))
+                        direction = 'Down';
+                    if (this.hasClassName('left'))
+                        direction = 'Left';
+                    if (this.hasClassName('right'))
+                        direction = 'Right';
+                }
+              
+            });
+        });
+        
+          
     }
 });

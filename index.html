@@ -11,7 +11,8 @@
 	<!--<script type="text/javascript" src="lib/jquery-ui-1.10.3.custom.min.js"></script>-->
     
 	<script type="text/javascript" src='js/game/core.js'></script>                
-    <script type="text/javascript" src='js/game/player.js'></script>
+    <script type="text/javascript" src='js/game/player.js'></script>           
+    <script type="text/javascript" src='js/game/playerAttack.js'></script>
     <script type="text/javascript" src='js/game/ground.js'></script>
     <script type="text/javascript" src='js/game/game.js'></script>
 	<script type="text/javascript" src='js/game/camera.js'></script>
@@ -20,6 +21,178 @@
 		canvas::selection {
 			background: transparent;
 		}
+
+	    #canvas
+	    {
+            -webkit-user-select: none;
+	    }
+        
+        .up, .down, .left, .right {
+            position: absolute;
+            z-index: 1001;
+            margin-left: 100px;
+            font-size: 40px;
+            width: 50px;
+            height: 50px;
+            background: #FFA03A;
+            border: 1px solid #915515;
+            box-shadow: 0 3px 0 #52300E, inset 0 0 10px rgba(255,255,255,0.3);
+            appearance: none;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .up:active, .down:active, .left:active, .right:active {margin-top: 3px;box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);}
+
+        .up:before, .down:before, .left:before, .right:before {
+	        display: block;
+	        position: absolute;
+	        content: "";
+	        width: 15px;
+	        height: 15px;
+	        border-radius: 15px;
+	        background: #E4923D;
+	        box-shadow: 0 2px 2px rgba(255,255,255,0.25), inset 0 1px 0 rgba(0,0,0,0.5);
+        }
+
+        .up:after, .down:after, .left:after, .right:after {
+	        display: block;
+	        position: absolute;
+	        content: "";
+	        top: -5px;
+	        left: -6px;
+	        width: 60px;
+	        height: 60px;
+	        border-radius: 60px;
+	        box-shadow: 0 2px 2px rgba(255,255,255,0.25), inset 0 2px 2px rgba(0,0,0,0.5);
+        }
+
+        .up:active:after, .down:active:after, .left:active:after, .right:active:after , .attack:active:after, .item1:active:after , .item2:active:after , .item3:active:after {top: -8px;}
+
+        .up {bottom: 130px;left: -25px;}
+        .up:before {top: 5px;left: 17px;}
+
+        .down {bottom: 30px;left: -25px;}
+        .down:before {bottom: 5px;left: 17px;}
+
+        .left {bottom: 80px;left: -75px;}
+        .left:before {top: 17px;left: 5px;}
+
+        .right {bottom: 80px;left: 25px;}
+        .right:before {top: 17px;right: 5px;}
+
+        .attack {
+            position: absolute;
+            z-index: 1001;
+            margin-right: 100px;
+            font-size: 40px;
+            width: 85px;
+            height: 85px;
+            background: #FFA03A;
+            border: 1px solid #915515;
+            box-shadow: 0 3px 0 #52300E, inset 0 0 10px rgba(255,255,255,0.3);
+            appearance: none;
+            border-radius: 70px;
+            cursor: pointer;
+            bottom: 95px;
+            right: -75px;
+        }
+
+        .attack:after{
+	        display: block;
+	        position: absolute;
+	        content: "";
+	        top: -5px;
+	        left: -6px;
+	        width: 95px;
+	        height: 95px;
+	        border-radius: 95px;
+	        box-shadow: 0 2px 2px rgba(255,255,255,0.25), inset 0 2px 2px rgba(0,0,0,0.5);
+        }
+
+        .shot1, .shot2, .shot3 {
+            position: absolute;
+            z-index: 1001;
+            margin-right: 100px;
+            font-size: 15px;
+            width: 35px;
+            height: 35px;
+            background: #FFA03A;
+            border: 1px solid #915515;
+            box-shadow: 0 3px 0 #52300E, inset 0 0 10px rgba(255,255,255,0.3);
+            appearance: none;
+            border-radius: 35px;
+            cursor: pointer;
+        }
+
+        .shot1:after, .shot2:after, .shot3:after{
+	        display: block;
+	        position: absolute;
+	        content: "";
+	        top: -5px;
+	        left: -6px;
+	        width: 45px;
+	        height: 45px;
+	        border-radius: 45px;
+	        box-shadow: 0 2px 2px rgba(255,255,255,0.25), inset 0 2px 2px rgba(0,0,0,0.5);
+        }
+
+        .shot1 {bottom: 30px; right: -52px;}
+         
+        .shot2 {bottom: 55px; right: 10px;}
+         
+        .shot3 {bottom: 115px; right: 40px;}
+        
+        .progress-bar {
+            position: absolute;
+	        background-color: #1a1a1a;
+	        height: 25px;
+	        padding: 5px;
+	        width: 350px;
+	        margin: 0px;	
+            bottom: 30px;	
+            margin-left: 50%;
+            left: -350px;	
+	        -moz-border-radius: 5px;
+	        -webkit-border-radius: 5px;
+	        border-radius: 5px;
+	        -moz-box-shadow: 0 1px 5px #000 inset, 0 1px 0 #444;
+	        -webkit-box-shadow: 0 1px 5px #000 inset, 0 1px 0 #444;
+	        box-shadow: 0 1px 5px #000 inset, 0 1px 0 #444;	          
+        }
+
+        .progress-bar span {
+	        display: inline-block;
+	        height: 100%;	
+	        -moz-border-radius: 3px;
+	        -webkit-border-radius: 3px;
+	        border-radius: 3px;
+	        -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+	        -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+	        box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+                -webkit-transition: width .4s ease-in-out;
+                -moz-transition: width .4s ease-in-out;
+                -ms-transition: width .4s ease-in-out;
+                -o-transition: width .4s ease-in-out;
+                transition: width .4s ease-in-out;    
+        }
+        .blue span {
+	        background-color: #34c2e3;   
+        }
+
+        html, body {height: 100%; overflow: hidden; }
+
+        /* HTML5 css reset */
+        html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, mark, audio, video {	margin: 0;	padding: 0;	border: 0;	font-size: 100%;	font: inherit;	vertical-align: baseline;}
+        
+        /* HTML5 display-role reset for older browsers */
+        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {	display: block;}
+        body {	line-height: 1;}
+        ol, ul { list-style: none; }
+        blockquote, q { quotes: none; }
+        blockquote:before, blockquote:after, q:before, q:after { 	content: ''; 	content: none; }
+        table { 	border-collapse: collapse;	border-spacing: 0;}
+
 	</style>
 
   </head>
@@ -53,37 +226,37 @@
 		var game;
 		var camera;
 		var mousestate;
-        
-        Event.observe(window, 'keydown', function (e) {
-            if (currentPlayer)
-                currentPlayer.move(e.keyIdentifier);
-        });
-
-		
-
+    
         Event.observe(window, 'load', function () {           
-                        
+                 
+            console.log($('buttonDown'));
+
             Event.observe('canvas', 'contextmenu', function (e) {
                 if (e.preventDefault) e.preventDefault();
                 return false;
             });
 
             ctx = $('canvas').getContext("2d");
-            canvasElm = $('canvas');            
+            canvasElm = $('canvas');
+
+            canvasElm.width = document.body.clientWidth; 
+            canvasElm.height = document.body.clientHeight;
+
             canvasWidth = parseInt(canvasElm.width);
             canvasHeight = parseInt(canvasElm.height);
             canvasTop = parseInt(canvasElm.style.top);
             canvasLeft = parseInt(canvasElm.style.left);
            
-            game = new Game(ctx, {});
+            game = new Game(window, ctx, { width: canvasWidth, height: canvasHeight });
             game.createGround();
+            game.createControls();
 
             var p1 = new Player('Henry', (canvasWidth / 2), canvasTop);
             var p2 = new Player('Joao', 60, canvasTop);
             var p3 = new Player('Denilson', canvasWidth - 30, canvasTop);
-            currentPlayer = p1;
+            game.currentPlayer = p1;
 
-			game.setInterest(p1);
+            game.setInterest(game.currentPlayer);
 
 			game.createPlayer(p1);
 			game.createPlayer(p2);
@@ -93,21 +266,29 @@
             
 			game.start();        
 			
-			ctx.translate(0, 0);  
+			ctx.translate(0, 0);  			
 			
-			
-			camera = new Camera(ctx);
-			mousestate = { x: 0, y: 0, pressed: false };
+		    camera = new Camera(ctx);
+			mousestate = { x: 0, y: 0, pressed: false};
 			
 			camera.setWorld(game);
 
-			Event.observe(window, 'mousedown', function (e) { mousestate.pressed = true; mousestate.x = e.offsetX; mousestate.y = e.offsetY; })
-			Event.observe(window, 'mouseup', function (e) { mousestate.pressed = false; })
-			Event.observe(window, 'mousemove', function (e) { 
+			Event.observe(window, 'mousedown', function (e) {			   
+			    e.preventDefault();
+			    mousestate.pressed = e.toElement.id == "canvas";
+			    mousestate.x = e.clientX; mousestate.y = e.clientY;
+			});
+
+			Event.observe(window, 'mouseup', function (e) {
+			    e.preventDefault();
+			    mousestate.pressed = false;
+			})
+
+			Event.observe(window, 'mousemove', function (e) {			    
 				if (mousestate.pressed) {
-					camera.setPosition(e.offsetX - mousestate.x, e.offsetY - mousestate.y);
-					mousestate.x = e.offsetX;
-					mousestate.y = e.offsetY;
+				    camera.setPosition(e.clientX - mousestate.x, e.clientY - mousestate.y);
+				    mousestate.x = e.clientX;
+				    mousestate.y = e.clientY;
 				} 
 			}); 	
         });
@@ -115,9 +296,22 @@
 
 		
     </script>
-
-    <canvas id="canvas" width='1000' height='400' style="top:0px; left:0px; background-color:#333333;">
+        
+    <canvas id="canvas" style="top:0px; left:0px; background-color:#333333;">      
+         
     </canvas>
+
+
+   
+    <button id="buttonAttack" class="attack" ></button>
+    <button id="buttonShot1" class="shot1" ></button>
+    <button id="buttonShot2" class="shot2" ></button>
+    <button id="buttonShot3" class="shot3" ></button>
+
+    <div class="progress-bar blue">
+        <span style="width: 10px"></span>
+    </div>
+
 
 </body>
 </html>
